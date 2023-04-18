@@ -12,9 +12,13 @@ namespace ChestSystem
         [SerializeField] private TextMeshProUGUI gemsGUI;
         [SerializeField] private Button spawnButton;
 
-        void Start()
-        {
+        void Start(){
             spawnButton.onClick.AddListener(SpawnChest);
+        }
+
+        public void UpdateStatusBar(int coins, int gems){
+            coinsGUI.text = "Coins " + coins.ToString();
+            gemsGUI.text = "Gems " + gems.ToString();
         }
 
         public void SpawnChest(){

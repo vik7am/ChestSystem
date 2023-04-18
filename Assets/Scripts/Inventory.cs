@@ -24,7 +24,6 @@ namespace ChestSystem
         }
 
         public bool SpawnChest(){
-            
             int index = GetEmptySlotIndex();
             if(index == -1)
                 return false;

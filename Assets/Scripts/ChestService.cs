@@ -8,14 +8,16 @@ namespace ChestSystem
     {
         Inventory inventory;
         [SerializeField] private InventoryUI inventoryUI;
+        [field: SerializeField] public PopupUI popupUI {get; private set;}
 
         private void Start() {
             inventory = new Inventory(inventoryUI);
         }
 
         public void SpawnChest(){
-            
-            inventory.SpawnChest();
+            if(inventory.SpawnChest() == false){
+                popupUI.ShowMessagePopup("All slots are Full.");
+            }
         }
     }
 }

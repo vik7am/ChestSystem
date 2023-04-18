@@ -26,7 +26,7 @@ namespace ChestSystem
         }
 
         private void ActionButtonClick(){
-            slot.DestroyChest();
+            slot.ShowChestUnlockOption();
         }
     }
 }

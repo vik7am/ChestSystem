@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace ChestSystem
 {
@@ -8,6 +9,7 @@ namespace ChestSystem
     {
         public SlotUI slotUI {get; private set;}
         ChestController chestController;
+        Action unlockChest;
 
         public bool IsSlotEmpty(){
             return chestController == null;
@@ -16,6 +18,7 @@ namespace ChestSystem
         public Slot(SlotUI slotUI){
             this.slotUI = slotUI;
             slotUI.SetSlot(this);
+            unlockChest += UnlockChest;
         }
 
         public void SpawnChest(){
@@ -23,7 +26,15 @@ namespace ChestSystem
             chestController = new ChestController(chestModel, slotUI.chestView);
             slotUI.statusGUI.text = "Locked";
             slotUI.actionButton.gameObject.SetActive(true);
-            
+        }
+
+        public void ShowChestUnlockOption(){
+            ChestService.Instance.popupUI.ShowChestUnlockPopup(unlockChest, unlockChest,
+                 "20 sec Time", "100 Gems");
+        }
+
+        public void UnlockChest(){
+            DestroyChest();
         }
 
         public void DestroyChest(){
