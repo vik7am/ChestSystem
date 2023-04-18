@@ -4,18 +4,19 @@ using UnityEngine;
 
 namespace ChestSystem
 {
-    public class ChestController : MonoBehaviour
+    public class ChestController
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
+        ChestView chestView;
+        ChestModel ChestModel;
+
+        public ChestController(ChestModel chestModel, ChestView chestView){
+            this.chestView = chestView;
+            this.ChestModel = chestModel;
+            SetChestActive(true);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+        public void SetChestActive(bool status){
+            chestView.gameObject.SetActive(status);
         }
     }
 }

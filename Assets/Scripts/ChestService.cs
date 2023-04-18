@@ -6,16 +6,16 @@ namespace ChestSystem
 {
     public class ChestService : GenericMonoSingleton<ChestService>
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
+        Inventory inventory;
+        [SerializeField] private InventoryUI inventoryUI;
+
+        private void Start() {
+            inventory = new Inventory(inventoryUI);
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-        
+        public void SpawnChest(){
+            
+            inventory.SpawnChest();
         }
     }
 }

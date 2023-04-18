@@ -6,7 +6,8 @@ namespace ChestSystem
 {
     public class InventoryUI : MonoBehaviour
     {
-        // Start is called before the first frame update
+        [field: SerializeField] public SlotUI[] slotUIArray {get; private set;}
+
         void Start()
         {
         

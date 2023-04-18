@@ -4,18 +4,8 @@ using UnityEngine;
 
 namespace ChestSystem
 {
-    public class ChestModel : MonoBehaviour
+    public class ChestModel
     {
-        // Start is called before the first frame update
-        void Start()
-        {
         
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }
