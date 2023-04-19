@@ -16,7 +16,7 @@ namespace ChestSystem
         private bool timerActive;
 
         private void Start() {
-            unlockChestWithTime += UnlockChestWithTime;
+            unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
         }
 
@@ -33,14 +33,22 @@ namespace ChestSystem
         public void UnlockChestWithGems(){
             ItemService.Instance.RemoveGems(chestModel.gems*2);
             chestController.chestModel.SetChestState(ChestState.UNLOCKED);
+            if(timerActive){
+                timerActive = false;
+                ChestService.Instance.inventory.RemoveChestFromQueue();
+            }
+        }
+
+        public void AddChestToUnlockQueue(){
+            ChestService.Instance.inventory.AddChestToUnlockQueue(chestController);
+            chestController.chestModel.SetChestState(ChestState.UNLOCKING);
+            chestController.chestModel.SetRemaingUnlockTime(chestController.chestModel.unlockTime);
         }
 
         public void UnlockChestWithTime(){
             timerActive = true;
             remainingTime = chestController.chestModel.unlockTime;
             prevRemainingTime = (int)remainingTime;
-            chestController.chestModel.SetChestState(ChestState.UNLOCKING);
-            chestController.chestModel.SetRemaingUnlockTime(prevRemainingTime);
         }
 
         void Update()
@@ -49,6 +57,7 @@ namespace ChestSystem
                 if(remainingTime<=0){
                     timerActive = false;
                     chestController.chestModel.SetChestState(ChestState.UNLOCKED);
+                    ChestService.Instance.inventory.RemoveChestFromQueue();
                     return;
                 }
                 remainingTime -= Time.deltaTime;

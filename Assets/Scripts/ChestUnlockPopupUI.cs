@@ -27,8 +27,14 @@ namespace ChestSystem
         public void ShowChestUnlockPopup(Action leftAction, Action rightAction, ChestModel chestModel){
             gameObject.SetActive(true);
             if(chestModel.chestState == ChestState.LOCKED){
-                leftButton.interactable = true;
-                leftMessageGUI.text = "Unlock for free in " + chestModel.unlockTime + " seconds";
+                if(ChestService.Instance.inventory.IsUnlockQueueFull()){
+                    leftButton.interactable = false;
+                    leftMessageGUI.text = "Chest Unlocking Queue is Full";
+                }
+                else{
+                    leftButton.interactable = true;
+                    leftMessageGUI.text = "Unlock for free in " + chestModel.unlockTime + " seconds";
+                }
             }
             else if(chestModel.chestState == ChestState.UNLOCKING){
                 leftButton.interactable = false;

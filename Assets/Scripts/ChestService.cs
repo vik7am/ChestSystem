@@ -6,7 +6,7 @@ namespace ChestSystem
 {
     public class ChestService : GenericMonoSingleton<ChestService>
     {
-        Inventory inventory;
+        public Inventory inventory {get; private set;}
         [SerializeField] private InventoryUI inventoryUI;
         [field: SerializeField] public ChestUnlockPopupUI chestUnlockPopupUI {get; private set;}
         [field: SerializeField] public MessagePopupUI messagePopupUI {get; private set;}
