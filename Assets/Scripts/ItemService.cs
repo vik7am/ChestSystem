@@ -15,8 +15,13 @@ namespace ChestSystem
         }
 
         public void AddCoinsAndGems(int coins, int gems){
-            coins += coins;
-            gems += gems;
+            this.coins += coins;
+            this.gems += gems;
+            UpdateItemsOnStatusBarUI();
+        }
+
+        public void RemoveGems(int gems){
+            this.gems -= gems;
             UpdateItemsOnStatusBarUI();
         }
 

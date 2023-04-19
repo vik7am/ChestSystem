@@ -36,14 +36,13 @@ namespace ChestSystem
             messageGUI.text = message;
         }
 
-        public void ShowChestUnlockPopup(Action leftAction, Action rightAction, 
-                string leftMessage, string rightMessage){
+        public void ShowChestUnlockPopup(Action leftAction, Action rightAction, ChestModel chestModel){
             gameObject.SetActive(true);
             chestUnlockPanel.SetActive(true);
             this.leftAction = leftAction;
             this.rightAction = rightAction;
-            leftMessageGUI.text = leftMessage;
-            rightMessageGUI.text = rightMessage;
+            leftMessageGUI.text = "Unlock for free in " + chestModel.unlockTime + " seconds";
+            rightMessageGUI.text = "Unlock using " + chestModel.gems*2 + " gems";
         }
 
         public void ClosePopup(){

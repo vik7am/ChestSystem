@@ -14,19 +14,43 @@ namespace ChestSystem
         private Slot slot;
 
         private void Awake(){
-            actionButton.onClick.AddListener(ActionButtonClick);
+            actionButton.onClick.AddListener(OnButtonClick);
         }
 
         private void Start() {
             statusGUI.text = "EMPTY";
         }
 
+        public void RegisterForChestEvents(ChestModel chestModel){
+            chestModel.onStateChange += UpdateChestStatus;
+            chestModel.onRemaingUnlockTimeChange += UpdateChestStatus;
+            UpdateChestStatus(chestModel.chestState);
+        }
+
+        public void UnregisterForChestEvents(ChestModel chestModel){
+            chestModel.onStateChange -= UpdateChestStatus;
+            chestModel.onRemaingUnlockTimeChange -= UpdateChestStatus;
+        }
+
+        public void UpdateChestStatus(ChestState chestState){
+            if(chestState == ChestState.LOCKED){
+                statusGUI.text = "Locked";
+            }
+            else if(chestState == ChestState.OPEN){
+                statusGUI.text = "Open";
+            }
+        }
+
+        public void UpdateChestStatus(int remainingUnlockTime){
+            statusGUI.text = remainingUnlockTime.ToString();
+        }
+
         public void SetSlot(Slot slot){
             this.slot = slot;
         }
 
-        private void ActionButtonClick(){
-            slot.ShowChestUnlockOption();
+        private void OnButtonClick(){
+            slot.TryToOpenChest();
         }
     }
 }

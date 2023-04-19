@@ -3211,5 +3211,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: Slot
       objectReference: {fileID: 0}
+    - target: {fileID: 3585715132590418448, guid: 0549c75b4817a7e448429ee680441ff9, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 150
+      objectReference: {fileID: 0}
+    - target: {fileID: 3585715132590418448, guid: 0549c75b4817a7e448429ee680441ff9, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0549c75b4817a7e448429ee680441ff9, type: 3}

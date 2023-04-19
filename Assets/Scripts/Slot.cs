@@ -9,7 +9,8 @@ namespace ChestSystem
     {
         public SlotUI slotUI {get; private set;}
         ChestController chestController;
-        Action unlockChest;
+        public Action unlockChestWithTime;
+        public Action unlockChestWithGems;
 
         public bool IsSlotEmpty(){
             return chestController == null;
@@ -18,26 +19,22 @@ namespace ChestSystem
         public Slot(SlotUI slotUI){
             this.slotUI = slotUI;
             slotUI.SetSlot(this);
-            unlockChest += UnlockChest;
         }
 
         public void SpawnChest(){
             ChestModel chestModel = new ChestModel();
-            chestController = new ChestController(chestModel, slotUI.chestView);
-            slotUI.statusGUI.text = "Locked";
+            chestController = new ChestController(this, chestModel, slotUI.chestView);
+            slotUI.RegisterForChestEvents(chestModel);
             slotUI.actionButton.gameObject.SetActive(true);
         }
 
-        public void ShowChestUnlockOption(){
-            ChestService.Instance.popupUI.ShowChestUnlockPopup(unlockChest, unlockChest,
-                 "20 sec Time", "100 Gems");
+        public void TryToOpenChest(){
+            chestController.TryToOpenChest();
         }
 
-        public void UnlockChest(){
-            DestroyChest();
-        }
 
-        public void DestroyChest(){
+        public void RemoveChest(){
+            slotUI.UnregisterForChestEvents(chestController.chestModel);
             chestController.SetChestActive(false);
             chestController = null;
             slotUI.statusGUI.text = "EMPTY";
