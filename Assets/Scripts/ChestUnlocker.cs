@@ -26,13 +26,13 @@ namespace ChestSystem
         }
 
         public void ShowOptionsToUnlockChest(){
-            ChestService.Instance.popupUI.ShowChestUnlockPopup(unlockChestWithTime, 
+            ChestService.Instance.chestUnlockPopupUI.ShowChestUnlockPopup(unlockChestWithTime, 
                 unlockChestWithGems, chestModel);
         }
 
         public void UnlockChestWithGems(){
             ItemService.Instance.RemoveGems(chestModel.gems*2);
-            chestController.chestModel.SetChestState(ChestState.OPEN);
+            chestController.chestModel.SetChestState(ChestState.UNLOCKED);
         }
 
         public void UnlockChestWithTime(){
@@ -48,7 +48,7 @@ namespace ChestSystem
             if(timerActive){
                 if(remainingTime<=0){
                     timerActive = false;
-                    chestController.chestModel.SetChestState(ChestState.OPEN);
+                    chestController.chestModel.SetChestState(ChestState.UNLOCKED);
                     return;
                 }
                 remainingTime -= Time.deltaTime;

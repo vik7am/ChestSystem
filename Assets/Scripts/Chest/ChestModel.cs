@@ -36,6 +36,6 @@ namespace ChestSystem
     public enum ChestState{
         LOCKED,
         UNLOCKING,
-        OPEN
+        UNLOCKED
     }
 }

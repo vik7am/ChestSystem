@@ -7,16 +7,5 @@ namespace ChestSystem
     public class InventoryUI : MonoBehaviour
     {
         [field: SerializeField] public SlotUI[] slotUIArray {get; private set;}
-
-        void Start()
-        {
-        
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
     }
 }

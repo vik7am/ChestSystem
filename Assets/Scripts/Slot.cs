@@ -32,7 +32,6 @@ namespace ChestSystem
             chestController.TryToOpenChest();
         }
 
-
         public void RemoveChest(){
             slotUI.UnregisterForChestEvents(chestController.chestModel);
             chestController.SetChestActive(false);

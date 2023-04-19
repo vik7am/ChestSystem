@@ -36,8 +36,8 @@ namespace ChestSystem
             if(chestState == ChestState.LOCKED){
                 statusGUI.text = "Locked";
             }
-            else if(chestState == ChestState.OPEN){
-                statusGUI.text = "Open";
+            else if(chestState == ChestState.UNLOCKED){
+                statusGUI.text = "Unlocked";
             }
         }
 

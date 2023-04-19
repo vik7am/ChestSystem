@@ -34,7 +34,8 @@ namespace ChestSystem
 
         public void OpenChest(){
             ItemService.Instance.AddCoinsAndGems(chestModel.coins, chestModel.gems);
-            ChestService.Instance.popupUI.ShowMessagePopup("Chest Unlocked with 10 coins and 5 gems");
+            string message = "Chest opened with " + chestModel.coins + " coins and " + chestModel.gems + " gems";
+            ChestService.Instance.messagePopupUI.ShowMessagePopup(message);
             slot.RemoveChest();
         }
 
