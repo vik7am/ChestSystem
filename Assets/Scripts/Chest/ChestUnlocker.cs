@@ -31,13 +31,17 @@ namespace ChestSystem
         public void UnlockChestWithGems(ChestModel chestModel){
             ItemService.Instance.RemoveGems(chestModel.gems.min*2);
             chestModel.SetChestState(ChestState.UNLOCKED);
-            if(timerActive){
+            if(unlockQueue.Peek() == chestModel && timerActive){
                 timerActive = false;
                 RemoveChestFromQueue();
             }
         }
 
         public void UnlockChestWithTime(ChestModel chestModel){
+            if(chestModel.chestState == ChestState.UNLOCKED){
+                RemoveChestFromQueue();
+                return;
+            }
             timerActive = true;
             remainingTime = chestModel.unlockTime;
             prevRemainingTime = (int)remainingTime;
@@ -45,7 +49,6 @@ namespace ChestSystem
 
         public void AddChestToUnlockQueue(ChestModel chestModel){
             chestModel.SetChestState(ChestState.UNLOCKING);
-            chestModel.SetRemaingUnlockTime(chestModel.unlockTime);
             unlockQueue.Enqueue(chestModel);
             if(!queueActive)
                 UnlockChestInQueue();
