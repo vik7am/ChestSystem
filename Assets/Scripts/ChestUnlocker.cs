@@ -7,10 +7,11 @@ namespace ChestSystem
 {
     public class ChestUnlocker : MonoBehaviour
     {
-        ChestController chestController;
-        ChestModel chestModel;
-        Action unlockChestWithTime;
-        Action unlockChestWithGems;
+        Queue<ChestModel> unlockQueue;
+        private int queueSize;
+        private bool queueActive;
+        Action<ChestModel> unlockChestWithTime;
+        Action<ChestModel> unlockChestWithGems;
         private int prevRemainingTime;
         private float remainingTime;
         private bool timerActive;
@@ -18,37 +19,53 @@ namespace ChestSystem
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
+            queueSize = 2;
+            unlockQueue = new Queue<ChestModel>();
         }
 
-        public void SetChestController(ChestController chestController){
-            this.chestController = chestController;
-            this.chestModel = chestController.chestModel;
-        }
-
-        public void ShowOptionsToUnlockChest(){
+        public void ShowOptionsToUnlockChest(ChestModel chestModel){
             ChestService.Instance.chestUnlockPopupUI.ShowChestUnlockPopup(unlockChestWithTime, 
                 unlockChestWithGems, chestModel);
         }
 
-        public void UnlockChestWithGems(){
+        public void UnlockChestWithGems(ChestModel chestModel){
             ItemService.Instance.RemoveGems(chestModel.gems*2);
-            chestController.chestModel.SetChestState(ChestState.UNLOCKED);
+            chestModel.SetChestState(ChestState.UNLOCKED);
             if(timerActive){
                 timerActive = false;
-                ChestService.Instance.inventory.RemoveChestFromQueue();
+                RemoveChestFromQueue();
             }
         }
 
-        public void AddChestToUnlockQueue(){
-            ChestService.Instance.inventory.AddChestToUnlockQueue(chestController);
-            chestController.chestModel.SetChestState(ChestState.UNLOCKING);
-            chestController.chestModel.SetRemaingUnlockTime(chestController.chestModel.unlockTime);
+        public void UnlockChestWithTime(ChestModel chestModel){
+            timerActive = true;
+            remainingTime = chestModel.unlockTime;
+            prevRemainingTime = (int)remainingTime;
         }
 
-        public void UnlockChestWithTime(){
-            timerActive = true;
-            remainingTime = chestController.chestModel.unlockTime;
-            prevRemainingTime = (int)remainingTime;
+        public void AddChestToUnlockQueue(ChestModel chestModel){
+            chestModel.SetChestState(ChestState.UNLOCKING);
+            chestModel.SetRemaingUnlockTime(chestModel.unlockTime);
+            unlockQueue.Enqueue(chestModel);
+            if(!queueActive)
+                UnlockChestInQueue();
+        }
+
+        public void RemoveChestFromQueue(){
+            unlockQueue.Dequeue();
+            if(unlockQueue.Count > 0)
+                UnlockChestInQueue();
+            else
+                queueActive = false;
+        }
+
+        public void UnlockChestInQueue(){
+            queueActive = true;
+            UnlockChestWithTime(unlockQueue.Peek());
+        }
+
+        public bool IsUnlockQueueFull(){
+            return unlockQueue.Count == queueSize;
         }
 
         void Update()
@@ -56,14 +73,14 @@ namespace ChestSystem
             if(timerActive){
                 if(remainingTime<=0){
                     timerActive = false;
-                    chestController.chestModel.SetChestState(ChestState.UNLOCKED);
-                    ChestService.Instance.inventory.RemoveChestFromQueue();
+                    unlockQueue.Peek().SetChestState(ChestState.UNLOCKED);
+                    RemoveChestFromQueue();
                     return;
                 }
                 remainingTime -= Time.deltaTime;
                 if(Mathf.CeilToInt(remainingTime) < prevRemainingTime){
                     prevRemainingTime = Mathf.CeilToInt(remainingTime);
-                    chestController.chestModel.SetRemaingUnlockTime(prevRemainingTime);
+                    unlockQueue.Peek().SetRemaingUnlockTime(prevRemainingTime);
                 }
             }
         }

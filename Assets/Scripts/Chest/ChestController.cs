@@ -15,17 +15,16 @@ namespace ChestSystem
             this.slot = slot;
             this.chestView = chestView;
             this.chestModel = chestModel;
-            chestUnlocker = chestView.GetComponent<ChestUnlocker>();
-            chestUnlocker.SetChestController(this);
+            chestUnlocker = ChestService.Instance.inventory.chestUnlocker;
             SetChestActive(true);
         }
         
         public void TryToOpenChest(){
             if(chestModel.chestState == ChestState.LOCKED){
-                chestUnlocker.ShowOptionsToUnlockChest();
+                chestUnlocker.ShowOptionsToUnlockChest(chestModel);
             }
             else if(chestModel.chestState == ChestState.UNLOCKING){
-                chestUnlocker.ShowOptionsToUnlockChest();
+                chestUnlocker.ShowOptionsToUnlockChest(chestModel);
             }
             else{
                 OpenChest();

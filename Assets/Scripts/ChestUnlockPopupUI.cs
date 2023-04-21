@@ -14,9 +14,10 @@ namespace ChestSystem
         [SerializeField] private TextMeshProUGUI rightMessageGUI;
         [SerializeField] private Button rightButton;
         [SerializeField] private Button closeButton;
+        private ChestModel chestModel;
         
-        private Action leftAction;
-        private Action rightAction;
+        private Action<ChestModel> leftAction;
+        private Action<ChestModel> rightAction;
 
         void Start(){
             closeButton.onClick.AddListener(ClosePopup);
@@ -24,10 +25,11 @@ namespace ChestSystem
             rightButton.onClick.AddListener(RightButtonClick);
         }
 
-        public void ShowChestUnlockPopup(Action leftAction, Action rightAction, ChestModel chestModel){
+        public void ShowChestUnlockPopup(Action<ChestModel> leftAction, Action<ChestModel> rightAction, ChestModel chestModel){
+            this.chestModel = chestModel;
             gameObject.SetActive(true);
             if(chestModel.chestState == ChestState.LOCKED){
-                if(ChestService.Instance.inventory.IsUnlockQueueFull()){
+                if(ChestService.Instance.inventory.chestUnlocker.IsUnlockQueueFull()){
                     leftButton.interactable = false;
                     leftMessageGUI.text = "Chest Unlocking Queue is Full";
                 }
@@ -50,12 +52,12 @@ namespace ChestSystem
         }
 
         public void LeftButtonClick(){
-            leftAction?.Invoke();
+            leftAction?.Invoke(chestModel);
             ClosePopup();
         }
 
         public void RightButtonClick(){
-            rightAction?.Invoke();
+            rightAction?.Invoke(chestModel);
             ClosePopup();
         }
     }

@@ -9,15 +9,12 @@ namespace ChestSystem
         InventoryUI inventoryUI;
         List<Slot> slotList;
         int slotsAvailable;
-        Queue<ChestController> unlockQueue;
-        private int queueSize;
-        private bool queueActive;
+        public ChestUnlocker chestUnlocker {get; private set;}
 
         public Inventory(InventoryUI inventoryUI){
             this.inventoryUI = inventoryUI;
-            queueSize = 2;
             slotsAvailable = inventoryUI.slotUIArray.Length;
-            unlockQueue = new Queue<ChestController>();
+            chestUnlocker = inventoryUI.GetComponent<ChestUnlocker>();
             CreateSlots();
         }
 
@@ -45,27 +42,6 @@ namespace ChestSystem
             return -1;
         }
 
-        public void AddChestToUnlockQueue(ChestController chestController){
-            unlockQueue.Enqueue(chestController);
-            if(!queueActive)
-                UnlockChestInQueue();
-        }
-
-        public void RemoveChestFromQueue(){
-            unlockQueue.Dequeue();
-            if(unlockQueue.Count > 0)
-                UnlockChestInQueue();
-            else
-                queueActive = false;
-        }
-
-        public void UnlockChestInQueue(){
-            queueActive = true;
-            unlockQueue.Peek().chestUnlocker.UnlockChestWithTime();
-        }
-
-        public bool IsUnlockQueueFull(){
-            return unlockQueue.Count == queueSize;
-        }
+        
     }
 }
