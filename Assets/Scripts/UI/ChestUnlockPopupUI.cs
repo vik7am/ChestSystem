@@ -20,6 +20,8 @@ namespace ChestSystem
         [SerializeField] private Button slowUnlockButton;
         [SerializeField] private Button instantUnlockButton;
         [SerializeField] private Button closeButton;
+        [SerializeField] private Image chestImage;
+        [field: SerializeField] public int timeReducedPerGem {get; private set;}
         private ChestModel chestModel;
         
         private Action<ChestModel> leftAction;
@@ -44,11 +46,14 @@ namespace ChestSystem
         }
 
         public void UpdateChestInfo(){
+            chestImage.sprite = chestModel.chestSprite;
             chestTypeGUI.text = "Chest Type : " + chestModel.name;
-            coinsDropRangeGUI.text = "Coins : " + chestModel.coins;
-            coinsDropRangeGUI.text = "Gems : " + chestModel.gems;
+            coinsDropRangeGUI.text = "Coins : " + chestModel.coins.min + " - " + chestModel.coins.max;
+            gemsDropRangeGUI.text = "Gems : " + chestModel.gems.min + " - " + chestModel.gems.max;
             unlockTimeGUI.text = "Time : " + chestModel.unlockTime + " sec";
-            unlockCostGUI.text = "Cost : " + chestModel.unlockTime*2 + " gems";
+            unlockCostGUI.text = "Cost : " + chestModel.unlockTime/timeReducedPerGem + " gems";
+            slowUnlockStatusGUI.text = "Click Unlock Button to unlock chest at a slower speed";
+            instantUnlockStatusGUI.text = "Click Unlock Button to unlock chest instantly with gems";
         }
 
         public void UpdateChestUnlockOptions(){
@@ -57,10 +62,18 @@ namespace ChestSystem
                     slowUnlockButton.interactable = false;
                     slowUnlockStatusGUI.text = "Chest Unlocking Queue is Full";
                 }
+                if(ItemService.Instance.gems < chestModel.unlockTime/timeReducedPerGem){
+                    instantUnlockButton.interactable = false;
+                    instantUnlockStatusGUI.text = "You don't have required no of gems";
+                }
             }
             if(chestModel.chestState == ChestState.UNLOCKING){
                 slowUnlockButton.interactable = false;
                 slowUnlockStatusGUI.text = "Unlock in Progress";
+                if(ItemService.Instance.gems < chestModel.unlockTime/timeReducedPerGem){
+                    instantUnlockButton.interactable = false;
+                    instantUnlockStatusGUI.text = "You don't have required no of gems";
+                }
             }
         }
 
@@ -79,8 +92,14 @@ namespace ChestSystem
 
         public void UpdateChestChanges(int unlockTime){
             slowUnlockStatusGUI.text = "Chest will unlock ater " + unlockTime + " sec";
-            int time = Mathf.CeilToInt((unlockTime*2)/10) * 10;
-            unlockCostGUI.text = "Cost : " + time + " gems";
+            int unlockCost = Mathf.CeilToInt(unlockTime/timeReducedPerGem);
+            unlockCostGUI.text = "Cost : " + unlockCost + " gems";
+            if(!instantUnlockButton.IsInteractable()){
+                if(unlockCost <= ItemService.Instance.gems){
+                    instantUnlockButton.interactable = true;
+                    instantUnlockStatusGUI.text = "Click Unlock Button to unlock chest instantly with gems";
+                }
+            }
         }
 
         public void RegisterForChestEvents(){

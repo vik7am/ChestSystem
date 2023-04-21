@@ -18,7 +18,7 @@ namespace ChestSystem
         }
 
         private void Start() {
-            statusGUI.text = "EMPTY";
+            statusGUI.text = "Empty";
         }
 
         public void RegisterForChestEvents(ChestModel chestModel){

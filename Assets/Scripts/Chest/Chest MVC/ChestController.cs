@@ -15,6 +15,7 @@ namespace ChestSystem
             this.slot = slot;
             this.chestView = chestView;
             this.chestModel = chestModel;
+            chestView.SetSprite(chestModel.chestSprite);
             chestUnlocker = ChestService.Instance.inventory.chestUnlocker;
             SetChestActive(true);
         }

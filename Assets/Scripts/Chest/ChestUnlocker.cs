@@ -15,6 +15,7 @@ namespace ChestSystem
         private int prevRemainingTime;
         private float remainingTime;
         private bool timerActive;
+        [field: SerializeField] public int timeReducedPerGem {get; private set;}
 
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
@@ -29,12 +30,15 @@ namespace ChestSystem
         }
 
         public void UnlockChestWithGems(ChestModel chestModel){
-            ItemService.Instance.RemoveGems(chestModel.gems.min*2);
-            chestModel.SetChestState(ChestState.UNLOCKED);
-            if(unlockQueue.Peek() == chestModel && timerActive){
-                timerActive = false;
-                RemoveChestFromQueue();
+            if(chestModel.chestState == ChestState.UNLOCKING){
+                if(unlockQueue.Peek() == chestModel && timerActive){
+                    timerActive = false;
+                    RemoveChestFromQueue();
+                }
             }
+            ItemService.Instance.RemoveGems(chestModel.remaingUnlockTime/timeReducedPerGem);
+            chestModel.SetChestState(ChestState.UNLOCKED);
+            
         }
 
         public void UnlockChestWithTime(ChestModel chestModel){

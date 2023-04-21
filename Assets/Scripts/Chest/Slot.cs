@@ -43,7 +43,7 @@ namespace ChestSystem
             slotUI.UnregisterForChestEvents(chestController.chestModel);
             chestController.SetChestActive(false);
             chestController = null;
-            slotUI.statusGUI.text = "EMPTY";
+            slotUI.statusGUI.text = "Empty";
             slotUI.actionButton.gameObject.SetActive(false);
         }
     }

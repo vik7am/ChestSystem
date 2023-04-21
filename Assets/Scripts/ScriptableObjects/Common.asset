@@ -21,4 +21,4 @@ MonoBehaviour:
     max: 20
   unlockTime: 15
   chestType: 0
-  chestSprite: {fileID: 0}
+  chestSprite: {fileID: 21300000, guid: 2860de2fc2374264780a63510c085b82, type: 3}
