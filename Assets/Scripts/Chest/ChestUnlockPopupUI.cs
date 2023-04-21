@@ -44,7 +44,7 @@ namespace ChestSystem
             }
             this.leftAction = leftAction;
             this.rightAction = rightAction;
-            rightMessageGUI.text = "Unlock using " + chestModel.gems*2 + " gems";
+            rightMessageGUI.text = "Unlock using " + chestModel.gems.min*2 + " gems";
         }
 
         public void ClosePopup(){

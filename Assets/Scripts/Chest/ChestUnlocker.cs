@@ -29,7 +29,7 @@ namespace ChestSystem
         }
 
         public void UnlockChestWithGems(ChestModel chestModel){
-            ItemService.Instance.RemoveGems(chestModel.gems*2);
+            ItemService.Instance.RemoveGems(chestModel.gems.min*2);
             chestModel.SetChestState(ChestState.UNLOCKED);
             if(timerActive){
                 timerActive = false;

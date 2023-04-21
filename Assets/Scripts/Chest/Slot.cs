@@ -22,10 +22,17 @@ namespace ChestSystem
         }
 
         public void SpawnChest(){
-            ChestModel chestModel = new ChestModel();
+            ChestConfigArraySO chestConfigs = ChestService.Instance.chestConfigArraySO;
+            int chestConfigIndex = GetRandomChestConfigIndex(chestConfigs);
+            ChestModel chestModel = new ChestModel(chestConfigs.chestConfigArray[chestConfigIndex]);
             chestController = new ChestController(this, chestModel, slotUI.chestView);
             slotUI.RegisterForChestEvents(chestModel);
             slotUI.actionButton.gameObject.SetActive(true);
+        }
+
+        public int GetRandomChestConfigIndex(ChestConfigArraySO chestConfigs){
+            int chestConfigCount = chestConfigs.chestConfigArray.Length;
+            return UnityEngine.Random.Range(0, chestConfigCount);
         }
 
         public void TryToOpenChest(){

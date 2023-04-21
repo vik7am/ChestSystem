@@ -10,6 +10,7 @@ namespace ChestSystem
         [SerializeField] private InventoryUI inventoryUI;
         [field: SerializeField] public ChestUnlockPopupUI chestUnlockPopupUI {get; private set;}
         [field: SerializeField] public MessagePopupUI messagePopupUI {get; private set;}
+        [field: SerializeField] public ChestConfigArraySO chestConfigArraySO {get; private set;}
 
         private void Start() {
             inventory = new Inventory(inventoryUI);
