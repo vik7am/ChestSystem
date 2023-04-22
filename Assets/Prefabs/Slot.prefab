@@ -93,7 +93,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <chestView>k__BackingField: {fileID: 3585715132290312022}
   statusGUI: {fileID: 3585715132904311391}
-  actionButton: {fileID: 3585715131822913272}
+  openChestButton: {fileID: 3585715131822913272}
 --- !u!1 &3585715131822913278
 GameObject:
   m_ObjectHideFlags: 0
@@ -107,7 +107,7 @@ GameObject:
   - component: {fileID: 3585715131822913275}
   - component: {fileID: 3585715131822913272}
   m_Layer: 5
-  m_Name: Action
+  m_Name: OpenButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

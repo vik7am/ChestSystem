@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
@@ -7,22 +6,23 @@ namespace ChestSystem
 {
     public class ChestUnlocker : MonoBehaviour
     {
-        Queue<ChestModel> unlockQueue;
-        private int queueSize;
+        private Queue<ChestModel> chestUnlockQueue;
+        private int chestUnlockQueueSize;
         private bool queueActive;
-        Action<ChestModel> unlockChestWithTime;
-        Action<ChestModel> unlockChestWithGems;
         private int prevRemainingTime;
         private float remainingTime;
-        private bool timerActive;
+        private bool chestUnlockProcessActive;
         private float timeReducedPerGem;
+
+        Action<ChestModel> unlockChestWithTime;
+        Action<ChestModel> unlockChestWithGems;
 
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
-            queueSize = 2;
-            unlockQueue = new Queue<ChestModel>();
+            chestUnlockQueue = new Queue<ChestModel>();
             timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
+            chestUnlockQueueSize = ChestService.Instance.chestUnlockQueueSize;
         }
 
         public void ShowOptionsToUnlockChest(ChestModel chestModel){
@@ -30,66 +30,70 @@ namespace ChestSystem
                 unlockChestWithGems, chestModel);
         }
 
-        public void UnlockChestWithGems(ChestModel chestModel){
+        private void UnlockChestWithTime(ChestModel chestModel){
+            if(chestModel.chestState == ChestState.UNLOCKED){
+                RemoveChestFromQueue();
+                return;
+            }
+            chestUnlockProcessActive = true;
+            remainingTime = chestModel.unlockTime;
+            prevRemainingTime = (int)remainingTime;
+        }
+
+        private void UnlockChestWithGems(ChestModel chestModel){
             if(chestModel.chestState == ChestState.UNLOCKING){
-                if(unlockQueue.Peek() == chestModel && timerActive){
-                    timerActive = false;
+                if(chestUnlockQueue.Peek() == chestModel && chestUnlockProcessActive){
+                    chestUnlockProcessActive = false;
                     RemoveChestFromQueue();
                 }
             }
             ItemService.Instance.RemoveGems(Mathf.CeilToInt(chestModel.remaingUnlockTime/timeReducedPerGem));
             chestModel.SetChestState(ChestState.UNLOCKED);
-            
         }
 
-        public void UnlockChestWithTime(ChestModel chestModel){
-            if(chestModel.chestState == ChestState.UNLOCKED){
-                RemoveChestFromQueue();
-                return;
-            }
-            timerActive = true;
-            remainingTime = chestModel.unlockTime;
-            prevRemainingTime = (int)remainingTime;
-        }
-
-        public void AddChestToUnlockQueue(ChestModel chestModel){
+        private void AddChestToUnlockQueue(ChestModel chestModel){
             chestModel.SetChestState(ChestState.UNLOCKING);
-            unlockQueue.Enqueue(chestModel);
+            chestUnlockQueue.Enqueue(chestModel);
             if(!queueActive)
                 UnlockChestInQueue();
         }
 
-        public void RemoveChestFromQueue(){
-            unlockQueue.Dequeue();
-            if(unlockQueue.Count > 0)
+        private void RemoveChestFromQueue(){
+            chestUnlockQueue.Dequeue();
+            if(chestUnlockQueue.Count > 0)
                 UnlockChestInQueue();
             else
                 queueActive = false;
         }
 
-        public void UnlockChestInQueue(){
+        private void UnlockChestInQueue(){
             queueActive = true;
-            UnlockChestWithTime(unlockQueue.Peek());
+            UnlockChestWithTime(chestUnlockQueue.Peek());
         }
 
         public bool IsUnlockQueueFull(){
-            return unlockQueue.Count == queueSize;
+            return chestUnlockQueue.Count == chestUnlockQueueSize;
         }
 
-        void Update()
+        private void Update()
         {
-            if(timerActive){
-                if(remainingTime<=0){
-                    timerActive = false;
-                    unlockQueue.Peek().SetChestState(ChestState.UNLOCKED);
-                    RemoveChestFromQueue();
-                    return;
-                }
-                remainingTime -= Time.deltaTime;
-                if(Mathf.CeilToInt(remainingTime) < prevRemainingTime){
-                    prevRemainingTime = Mathf.CeilToInt(remainingTime);
-                    unlockQueue.Peek().SetRemaingUnlockTime(prevRemainingTime);
-                }
+            if(chestUnlockProcessActive){
+                UpdateChestUnlockTimer();
+            }
+        }
+
+        private void UpdateChestUnlockTimer(){
+            if(remainingTime<=0){
+                chestUnlockProcessActive = false;
+                chestUnlockQueue.Peek().SetChestState(ChestState.UNLOCKED);
+                RemoveChestFromQueue();
+                return;
+            }
+            remainingTime -= Time.deltaTime;
+            //Updating chest remaningUnlock time after 1 sec has passed
+            if(Mathf.CeilToInt(remainingTime) < prevRemainingTime){
+                prevRemainingTime = Mathf.CeilToInt(remainingTime);
+                chestUnlockQueue.Peek().SetRemaingUnlockTime(prevRemainingTime);
             }
         }
     }

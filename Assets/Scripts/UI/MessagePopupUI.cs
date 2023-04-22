@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -11,7 +9,7 @@ namespace ChestSystem
         [SerializeField] private Button closeButton;
         [SerializeField] private TextMeshProUGUI messageGUI;
 
-        void Start(){
+        private void Start(){
             closeButton.onClick.AddListener(ClosePopup);
         }
 
@@ -20,7 +18,7 @@ namespace ChestSystem
             messageGUI.text = message;
         }
 
-        public void ClosePopup(){
+        private void ClosePopup(){
             gameObject.SetActive(false);
         }
     }

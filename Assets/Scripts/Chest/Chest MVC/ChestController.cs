@@ -1,15 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ChestSystem
 {
     public class ChestController
     {
-        ChestView chestView;
+        private ChestView chestView;
         public ChestModel chestModel {get; private set;}
         public ChestUnlocker chestUnlocker {get; private set;}
-        public Slot slot;
+        private Slot slot;
 
         public ChestController(Slot slot, ChestModel chestModel, ChestView chestView){
             this.slot = slot;
@@ -27,15 +25,16 @@ namespace ChestSystem
             else if(chestModel.chestState == ChestState.UNLOCKING){
                 chestUnlocker.ShowOptionsToUnlockChest(chestModel);
             }
-            else{
+            else if(chestModel.chestState == ChestState.UNLOCKED){
                 OpenChest();
             }
         }
 
-        public void OpenChest(){
+        private void OpenChest(){
             int randomCoins = Random.Range(chestModel.coins.min, chestModel.coins.max);
             int randomGems = Random.Range(chestModel.gems.min, chestModel.gems.max);
-            ItemService.Instance.AddCoinsAndGems(chestModel.coins.max, chestModel.gems.max);
+            ItemService.Instance.AddCoins(randomCoins);
+            ItemService.Instance.AddGems(randomGems);
             string message = "Chest opened with " + randomCoins + " coins and " + randomGems + " gems";
             ChestService.Instance.messagePopupUI.ShowMessagePopup(message);
             slot.RemoveChest();

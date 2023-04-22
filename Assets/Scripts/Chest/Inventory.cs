@@ -1,14 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ChestSystem
 {
     public class Inventory 
     {
-        InventoryUI inventoryUI;
-        List<Slot> slotList;
-        int slotsAvailable;
+        private InventoryUI inventoryUI;
+        private List<Slot> slotList;
+        private int slotsAvailable;
         public ChestUnlocker chestUnlocker {get; private set;}
 
         public Inventory(InventoryUI inventoryUI){
@@ -25,6 +23,7 @@ namespace ChestSystem
             }
         }
 
+        // Returns false if failed to spawn chest
         public bool SpawnChest(){
             int index = GetEmptySlotIndex();
             if(index == -1)
@@ -33,6 +32,7 @@ namespace ChestSystem
             return true;
         }
 
+        // Returns -1 if no slots are awailable
         private int GetEmptySlotIndex(){
             for(int i=0; i<slotsAvailable; i++){
                 if(slotList[i].IsSlotEmpty()){

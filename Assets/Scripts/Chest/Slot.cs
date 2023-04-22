@@ -1,20 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 
 namespace ChestSystem
 {
     public class Slot 
     {
+        private ChestController chestController;
         public SlotUI slotUI {get; private set;}
-        ChestController chestController;
         public Action unlockChestWithTime;
         public Action unlockChestWithGems;
-
-        public bool IsSlotEmpty(){
-            return chestController == null;
-        }
 
         public Slot(SlotUI slotUI){
             this.slotUI = slotUI;
@@ -27,7 +20,7 @@ namespace ChestSystem
             ChestModel chestModel = new ChestModel(chestConfigs.chestConfigArray[chestConfigIndex]);
             chestController = new ChestController(this, chestModel, slotUI.chestView);
             slotUI.RegisterForChestEvents(chestModel);
-            slotUI.actionButton.gameObject.SetActive(true);
+            slotUI.OpenChestButtonActive(true);
         }
 
         public int GetRandomChestConfigIndex(ChestConfigArraySO chestConfigs){
@@ -43,8 +36,12 @@ namespace ChestSystem
             slotUI.UnregisterForChestEvents(chestController.chestModel);
             chestController.SetChestActive(false);
             chestController = null;
-            slotUI.statusGUI.text = "Empty";
-            slotUI.actionButton.gameObject.SetActive(false);
+            slotUI.UpdateStatusText("Empty");
+            slotUI.OpenChestButtonActive(false);
+        }
+
+        public bool IsSlotEmpty(){
+            return chestController == null;
         }
     }
 }

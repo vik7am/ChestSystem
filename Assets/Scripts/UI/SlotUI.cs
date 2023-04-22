@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -10,15 +8,15 @@ namespace ChestSystem
     {
         [field: SerializeField] public ChestView chestView {get; private set;}
         [SerializeField] public TextMeshProUGUI statusGUI;
-        [SerializeField] public Button actionButton;
+        [SerializeField] public Button openChestButton;
         private Slot slot;
 
         private void Awake(){
-            actionButton.onClick.AddListener(OnButtonClick);
+            openChestButton.onClick.AddListener(OpenChestButtonClick);
         }
 
         private void Start() {
-            statusGUI.text = "Empty";
+            UpdateStatusText("Empty");
         }
 
         public void RegisterForChestEvents(ChestModel chestModel){
@@ -34,13 +32,13 @@ namespace ChestSystem
 
         public void UpdateChestStatus(ChestState chestState){
             if(chestState == ChestState.LOCKED){
-                statusGUI.text = "Locked";
+                UpdateStatusText("Locked");
             } 
             else if(chestState == ChestState.UNLOCKING){
-                statusGUI.text = "Unlocking";
+                UpdateStatusText("Unlocking");
             }
             else if(chestState == ChestState.UNLOCKED){
-                statusGUI.text = "Unlocked";
+                UpdateStatusText("Unlocked");
             }
         }
 
@@ -52,8 +50,16 @@ namespace ChestSystem
             this.slot = slot;
         }
 
-        private void OnButtonClick(){
+        private void OpenChestButtonClick(){
             slot.TryToOpenChest();
+        }
+
+        public void OpenChestButtonActive(bool status){
+            openChestButton.gameObject.SetActive(status);
+        }
+
+        public void UpdateStatusText(string text){
+            statusGUI.text = text;
         }
     }
 }
