@@ -15,6 +15,7 @@ namespace ChestSystem
             this.slot = slot;
             this.chestView = chestView;
             this.chestModel = chestModel;
+            chestView.SetSprite(chestModel.chestSprite);
             chestUnlocker = ChestService.Instance.inventory.chestUnlocker;
             SetChestActive(true);
         }
@@ -32,8 +33,10 @@ namespace ChestSystem
         }
 
         public void OpenChest(){
-            ItemService.Instance.AddCoinsAndGems(chestModel.coins, chestModel.gems);
-            string message = "Chest opened with " + chestModel.coins + " coins and " + chestModel.gems + " gems";
+            int randomCoins = Random.Range(chestModel.coins.min, chestModel.coins.max);
+            int randomGems = Random.Range(chestModel.gems.min, chestModel.gems.max);
+            ItemService.Instance.AddCoinsAndGems(chestModel.coins.max, chestModel.gems.max);
+            string message = "Chest opened with " + randomCoins + " coins and " + randomGems + " gems";
             ChestService.Instance.messagePopupUI.ShowMessagePopup(message);
             slot.RemoveChest();
         }

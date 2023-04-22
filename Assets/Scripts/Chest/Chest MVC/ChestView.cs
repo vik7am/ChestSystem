@@ -7,6 +7,10 @@ namespace ChestSystem
 {
     public class ChestView : MonoBehaviour
     {
-        public Image image {get; private set;}
+        [SerializeField] private Image chestImage;
+
+        public void SetSprite(Sprite sprite){
+            chestImage.sprite = sprite;
+        }
     }
 }

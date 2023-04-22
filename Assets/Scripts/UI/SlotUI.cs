@@ -18,7 +18,7 @@ namespace ChestSystem
         }
 
         private void Start() {
-            statusGUI.text = "EMPTY";
+            statusGUI.text = "Empty";
         }
 
         public void RegisterForChestEvents(ChestModel chestModel){
@@ -35,6 +35,9 @@ namespace ChestSystem
         public void UpdateChestStatus(ChestState chestState){
             if(chestState == ChestState.LOCKED){
                 statusGUI.text = "Locked";
+            } 
+            else if(chestState == ChestState.UNLOCKING){
+                statusGUI.text = "Unlocking";
             }
             else if(chestState == ChestState.UNLOCKED){
                 statusGUI.text = "Unlocked";

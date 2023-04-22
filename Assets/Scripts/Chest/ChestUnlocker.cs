@@ -15,12 +15,14 @@ namespace ChestSystem
         private int prevRemainingTime;
         private float remainingTime;
         private bool timerActive;
+        private float timeReducedPerGem;
 
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
             queueSize = 2;
             unlockQueue = new Queue<ChestModel>();
+            timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
         }
 
         public void ShowOptionsToUnlockChest(ChestModel chestModel){
@@ -29,15 +31,22 @@ namespace ChestSystem
         }
 
         public void UnlockChestWithGems(ChestModel chestModel){
-            ItemService.Instance.RemoveGems(chestModel.gems*2);
-            chestModel.SetChestState(ChestState.UNLOCKED);
-            if(timerActive){
-                timerActive = false;
-                RemoveChestFromQueue();
+            if(chestModel.chestState == ChestState.UNLOCKING){
+                if(unlockQueue.Peek() == chestModel && timerActive){
+                    timerActive = false;
+                    RemoveChestFromQueue();
+                }
             }
+            ItemService.Instance.RemoveGems(Mathf.CeilToInt(chestModel.remaingUnlockTime/timeReducedPerGem));
+            chestModel.SetChestState(ChestState.UNLOCKED);
+            
         }
 
         public void UnlockChestWithTime(ChestModel chestModel){
+            if(chestModel.chestState == ChestState.UNLOCKED){
+                RemoveChestFromQueue();
+                return;
+            }
             timerActive = true;
             remainingTime = chestModel.unlockTime;
             prevRemainingTime = (int)remainingTime;
@@ -45,7 +54,6 @@ namespace ChestSystem
 
         public void AddChestToUnlockQueue(ChestModel chestModel){
             chestModel.SetChestState(ChestState.UNLOCKING);
-            chestModel.SetRemaingUnlockTime(chestModel.unlockTime);
             unlockQueue.Enqueue(chestModel);
             if(!queueActive)
                 UnlockChestInQueue();
