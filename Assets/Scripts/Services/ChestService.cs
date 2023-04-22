@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ChestSystem
@@ -12,13 +10,14 @@ namespace ChestSystem
         [field: SerializeField] public MessagePopupUI messagePopupUI {get; private set;}
         [field: SerializeField] public ChestConfigArraySO chestConfigArraySO {get; private set;}
         [field: SerializeField] public float timeReducedPerGem {get; private set;}
+        [field: SerializeField] public int chestUnlockQueueSize;
 
         private void Start() {
             inventory = new Inventory(inventoryUI);
         }
 
         public void SpawnChest(){
-            if(inventory.SpawnChest() == false){
+            if(!inventory.SpawnChest()){
                 messagePopupUI.ShowMessagePopup("All slots are Full.");
             }
         }

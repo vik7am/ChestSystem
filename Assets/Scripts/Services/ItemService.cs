@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace ChestSystem
@@ -14,9 +12,13 @@ namespace ChestSystem
             statusBarUI.UpdateStatusBar(coins, gems);
         }
 
-        public void AddCoinsAndGems(int coins, int gems){
+        public void AddCoins(int coins){
             this.coins += coins;
-            this.gems += gems;
+            UpdateItemsOnStatusBarUI();
+        }
+
+        public void AddGems(int gems){
+            this.gems = gems;
             UpdateItemsOnStatusBarUI();
         }
 
@@ -25,7 +27,7 @@ namespace ChestSystem
             UpdateItemsOnStatusBarUI();
         }
 
-        void UpdateItemsOnStatusBarUI(){
+        private void UpdateItemsOnStatusBarUI(){
             statusBarUI.UpdateStatusBar(coins, gems);
         }
     }

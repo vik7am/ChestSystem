@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -12,7 +10,7 @@ namespace ChestSystem
         [SerializeField] private TextMeshProUGUI gemsGUI;
         [SerializeField] private Button spawnButton;
 
-        void Start(){
+        private void Start(){
             spawnButton.onClick.AddListener(SpawnChest);
         }
 

@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using System;
 
@@ -7,13 +5,12 @@ namespace ChestSystem
 {
     public class ChestModel
     {
-        public string name;
+        public string name {get; private set;}
         public ItemRange coins {get; private set;}
         public ItemRange gems {get; private set;}
         public int unlockTime {get; private set;}
         public ChestType chestType {get; private set;}
         public Sprite chestSprite {get; private set;}
-
         public int remaingUnlockTime {get; private set;}
         public ChestState chestState {get; private set;}
 

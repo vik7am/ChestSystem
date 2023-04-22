@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -9,6 +7,7 @@ namespace ChestSystem
 {
     public class ChestUnlockPopupUI : MonoBehaviour
     {
+        [SerializeField] private Image chestImage;
         [SerializeField] private TextMeshProUGUI chestTypeGUI;
         [SerializeField] private TextMeshProUGUI coinsDropRangeGUI;
         [SerializeField] private TextMeshProUGUI gemsDropRangeGUI;
@@ -20,7 +19,7 @@ namespace ChestSystem
         [SerializeField] private Button slowUnlockButton;
         [SerializeField] private Button instantUnlockButton;
         [SerializeField] private Button closeButton;
-        [SerializeField] private Image chestImage;
+        
         private float timeReducedPerGem;
         private ChestModel chestModel;
         
@@ -31,7 +30,7 @@ namespace ChestSystem
             timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
         }
 
-        void Start(){
+        private void Start(){
             closeButton.onClick.AddListener(ClosePopup);
             slowUnlockButton.onClick.AddListener(LeftButtonClick);
             instantUnlockButton.onClick.AddListener(RightButtonClick);
@@ -49,8 +48,7 @@ namespace ChestSystem
             this.rightAction = rightAction;
         }
 
-        public void UpdateChestInfo(){
-            
+        private void UpdateChestInfo(){
             chestImage.sprite = chestModel.chestSprite;
             chestTypeGUI.text = "Chest Type : " + chestModel.name;
             coinsDropRangeGUI.text = "Coins : " + chestModel.coins.min + " - " + chestModel.coins.max;
@@ -61,7 +59,7 @@ namespace ChestSystem
             instantUnlockStatusGUI.text = "Click Unlock Button to unlock chest instantly with gems";
         }
 
-        public void UpdateChestUnlockOptions(){
+        private void UpdateChestUnlockOptions(){
             if(chestModel.chestState == ChestState.LOCKED){
                 if(ChestService.Instance.inventory.chestUnlocker.IsUnlockQueueFull()){
                     slowUnlockButton.interactable = false;
@@ -82,7 +80,7 @@ namespace ChestSystem
             }
         }
 
-        public void UpdateChestChanges(ChestState chestState){
+        private void UpdateChestChanges(ChestState chestState){
             if(chestState == ChestState.UNLOCKING){
                 slowUnlockButton.interactable = false;
                 slowUnlockStatusGUI.text = "Chest will unlock ater " + chestModel.unlockTime + " sec";
@@ -95,7 +93,7 @@ namespace ChestSystem
             }
         }
 
-        public void UpdateChestChanges(int unlockTime){
+        private void UpdateChestChanges(int unlockTime){
             slowUnlockStatusGUI.text = "Chest will unlock ater " + unlockTime + " sec";
             int unlockCost = Mathf.CeilToInt(unlockTime/timeReducedPerGem);
             unlockCostGUI.text = "Cost : " + unlockCost + " gems";
@@ -107,27 +105,27 @@ namespace ChestSystem
             }
         }
 
-        public void RegisterForChestEvents(){
+        private void RegisterForChestEvents(){
             chestModel.onStateChange += UpdateChestChanges;
             chestModel.onRemaingUnlockTimeChange += UpdateChestChanges;
         }
 
-        public void UnregisterForChestEvents(){
+        private void UnregisterForChestEvents(){
             chestModel.onStateChange -= UpdateChestChanges;
             chestModel.onRemaingUnlockTimeChange -= UpdateChestChanges;
         }
 
-        public void ClosePopup(){
+        private void ClosePopup(){
             UnregisterForChestEvents();
             gameObject.SetActive(false);
         }
 
-        public void LeftButtonClick(){
+        private void LeftButtonClick(){
             leftAction?.Invoke(chestModel);
             ClosePopup();
         }
 
-        public void RightButtonClick(){
+        private void RightButtonClick(){
             rightAction?.Invoke(chestModel);
             ClosePopup();
         }

@@ -1,14 +1,12 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 namespace ChestSystem
 {
     public class Inventory 
     {
-        InventoryUI inventoryUI;
-        List<Slot> slotList;
-        int slotsAvailable;
+        private InventoryUI inventoryUI;
+        private List<Slot> slotList;
+        private int slotsAvailable;
         public ChestUnlocker chestUnlocker {get; private set;}
 
         public Inventory(InventoryUI inventoryUI){

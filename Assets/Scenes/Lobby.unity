@@ -643,7 +643,6 @@ MonoBehaviour:
   instantUnlockButton: {fileID: 1889363650}
   closeButton: {fileID: 703396159}
   chestImage: {fileID: 118288086}
-  <timeReducedPerGem>k__BackingField: 5
 --- !u!114 &204569472
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1089,7 +1088,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b160a483bc8ce44386994800951ab5c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  <timeReducedPerGem>k__BackingField: 5
 --- !u!1 &330371527
 GameObject:
   m_ObjectHideFlags: 0
@@ -2944,6 +2942,7 @@ MonoBehaviour:
   <messagePopupUI>k__BackingField: {fileID: 1222689103}
   <chestConfigArraySO>k__BackingField: {fileID: 11400000, guid: 5a89524c02649f141b7afc6d95d0db59, type: 2}
   <timeReducedPerGem>k__BackingField: 5
+  chestUnlockQueueSize: 2
 --- !u!1 &1222689101
 GameObject:
   m_ObjectHideFlags: 0
