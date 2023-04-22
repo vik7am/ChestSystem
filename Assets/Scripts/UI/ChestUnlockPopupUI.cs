@@ -21,11 +21,15 @@ namespace ChestSystem
         [SerializeField] private Button instantUnlockButton;
         [SerializeField] private Button closeButton;
         [SerializeField] private Image chestImage;
-        [field: SerializeField] public int timeReducedPerGem {get; private set;}
+        private float timeReducedPerGem;
         private ChestModel chestModel;
         
         private Action<ChestModel> leftAction;
         private Action<ChestModel> rightAction;
+
+        private void Awake() {
+            timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
+        }
 
         void Start(){
             closeButton.onClick.AddListener(ClosePopup);
@@ -46,6 +50,7 @@ namespace ChestSystem
         }
 
         public void UpdateChestInfo(){
+            
             chestImage.sprite = chestModel.chestSprite;
             chestTypeGUI.text = "Chest Type : " + chestModel.name;
             coinsDropRangeGUI.text = "Coins : " + chestModel.coins.min + " - " + chestModel.coins.max;

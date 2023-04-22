@@ -2943,6 +2943,7 @@ MonoBehaviour:
   <chestUnlockPopupUI>k__BackingField: {fileID: 204569471}
   <messagePopupUI>k__BackingField: {fileID: 1222689103}
   <chestConfigArraySO>k__BackingField: {fileID: 11400000, guid: 5a89524c02649f141b7afc6d95d0db59, type: 2}
+  <timeReducedPerGem>k__BackingField: 5
 --- !u!1 &1222689101
 GameObject:
   m_ObjectHideFlags: 0

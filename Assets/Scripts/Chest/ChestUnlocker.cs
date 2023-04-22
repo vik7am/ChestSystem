@@ -15,13 +15,14 @@ namespace ChestSystem
         private int prevRemainingTime;
         private float remainingTime;
         private bool timerActive;
-        [field: SerializeField] public int timeReducedPerGem {get; private set;}
+        private float timeReducedPerGem;
 
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
             queueSize = 2;
             unlockQueue = new Queue<ChestModel>();
+            timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
         }
 
         public void ShowOptionsToUnlockChest(ChestModel chestModel){
@@ -36,7 +37,7 @@ namespace ChestSystem
                     RemoveChestFromQueue();
                 }
             }
-            ItemService.Instance.RemoveGems(chestModel.remaingUnlockTime/timeReducedPerGem);
+            ItemService.Instance.RemoveGems(Mathf.CeilToInt(chestModel.remaingUnlockTime/timeReducedPerGem));
             chestModel.SetChestState(ChestState.UNLOCKED);
             
         }
