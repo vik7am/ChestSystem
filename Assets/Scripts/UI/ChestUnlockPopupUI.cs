@@ -23,8 +23,8 @@ namespace ChestSystem
         private float timeReducedPerGem;
         private ChestModel chestModel;
         
-        private Action<ChestModel> leftAction;
-        private Action<ChestModel> rightAction;
+        private Action<ChestModel> slowUnlockAction;
+        private Action<ChestModel> instantUnlockAction;
 
         private void Awake() {
             timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
@@ -32,11 +32,11 @@ namespace ChestSystem
 
         private void Start(){
             closeButton.onClick.AddListener(ClosePopup);
-            slowUnlockButton.onClick.AddListener(LeftButtonClick);
-            instantUnlockButton.onClick.AddListener(RightButtonClick);
+            slowUnlockButton.onClick.AddListener(SlowUnlockButtonClick);
+            instantUnlockButton.onClick.AddListener(InstantUnlockButtonClick);
         }
 
-        public void ShowChestUnlockPopup(Action<ChestModel> leftAction, Action<ChestModel> rightAction, ChestModel chestModel){
+        public void ShowChestUnlockPopup(Action<ChestModel> slowUnlockAction, Action<ChestModel> instantUnlockAction, ChestModel chestModel){
             this.chestModel = chestModel;
             gameObject.SetActive(true);
             instantUnlockButton.interactable = true;
@@ -44,8 +44,8 @@ namespace ChestSystem
             UpdateChestInfo();
             UpdateChestUnlockOptions();
             RegisterForChestEvents();
-            this.leftAction = leftAction;
-            this.rightAction = rightAction;
+            this.slowUnlockAction = slowUnlockAction;
+            this.instantUnlockAction = instantUnlockAction;
         }
 
         private void UpdateChestInfo(){
@@ -120,13 +120,13 @@ namespace ChestSystem
             gameObject.SetActive(false);
         }
 
-        private void LeftButtonClick(){
-            leftAction?.Invoke(chestModel);
+        private void SlowUnlockButtonClick(){
+            slowUnlockAction?.Invoke(chestModel);
             ClosePopup();
         }
 
-        private void RightButtonClick(){
-            rightAction?.Invoke(chestModel);
+        private void InstantUnlockButtonClick(){
+            instantUnlockAction?.Invoke(chestModel);
             ClosePopup();
         }
     }

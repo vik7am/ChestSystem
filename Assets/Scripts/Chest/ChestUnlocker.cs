@@ -6,12 +6,12 @@ namespace ChestSystem
 {
     public class ChestUnlocker : MonoBehaviour
     {
-        private Queue<ChestModel> unlockQueue;
+        private Queue<ChestModel> chestUnlockQueue;
         private int chestUnlockQueueSize;
         private bool queueActive;
         private int prevRemainingTime;
         private float remainingTime;
-        private bool timerActive;
+        private bool chestUnlockProcessActive;
         private float timeReducedPerGem;
 
         Action<ChestModel> unlockChestWithTime;
@@ -20,7 +20,7 @@ namespace ChestSystem
         private void Start() {
             unlockChestWithTime += AddChestToUnlockQueue;
             unlockChestWithGems += UnlockChestWithGems;
-            unlockQueue = new Queue<ChestModel>();
+            chestUnlockQueue = new Queue<ChestModel>();
             timeReducedPerGem = ChestService.Instance.timeReducedPerGem;
             chestUnlockQueueSize = ChestService.Instance.chestUnlockQueueSize;
         }
@@ -35,15 +35,15 @@ namespace ChestSystem
                 RemoveChestFromQueue();
                 return;
             }
-            timerActive = true;
+            chestUnlockProcessActive = true;
             remainingTime = chestModel.unlockTime;
             prevRemainingTime = (int)remainingTime;
         }
 
         private void UnlockChestWithGems(ChestModel chestModel){
             if(chestModel.chestState == ChestState.UNLOCKING){
-                if(unlockQueue.Peek() == chestModel && timerActive){
-                    timerActive = false;
+                if(chestUnlockQueue.Peek() == chestModel && chestUnlockProcessActive){
+                    chestUnlockProcessActive = false;
                     RemoveChestFromQueue();
                 }
             }
@@ -53,14 +53,14 @@ namespace ChestSystem
 
         private void AddChestToUnlockQueue(ChestModel chestModel){
             chestModel.SetChestState(ChestState.UNLOCKING);
-            unlockQueue.Enqueue(chestModel);
+            chestUnlockQueue.Enqueue(chestModel);
             if(!queueActive)
                 UnlockChestInQueue();
         }
 
         private void RemoveChestFromQueue(){
-            unlockQueue.Dequeue();
-            if(unlockQueue.Count > 0)
+            chestUnlockQueue.Dequeue();
+            if(chestUnlockQueue.Count > 0)
                 UnlockChestInQueue();
             else
                 queueActive = false;
@@ -68,31 +68,32 @@ namespace ChestSystem
 
         private void UnlockChestInQueue(){
             queueActive = true;
-            UnlockChestWithTime(unlockQueue.Peek());
+            UnlockChestWithTime(chestUnlockQueue.Peek());
         }
 
         public bool IsUnlockQueueFull(){
-            return unlockQueue.Count == chestUnlockQueueSize;
+            return chestUnlockQueue.Count == chestUnlockQueueSize;
         }
 
         private void Update()
         {
-            if(timerActive){
+            if(chestUnlockProcessActive){
                 UpdateChestUnlockTimer();
             }
         }
 
         private void UpdateChestUnlockTimer(){
             if(remainingTime<=0){
-                timerActive = false;
-                unlockQueue.Peek().SetChestState(ChestState.UNLOCKED);
+                chestUnlockProcessActive = false;
+                chestUnlockQueue.Peek().SetChestState(ChestState.UNLOCKED);
                 RemoveChestFromQueue();
                 return;
             }
             remainingTime -= Time.deltaTime;
+            //Updating chest remaningUnlock time after 1 sec has passed
             if(Mathf.CeilToInt(remainingTime) < prevRemainingTime){
                 prevRemainingTime = Mathf.CeilToInt(remainingTime);
-                unlockQueue.Peek().SetRemaingUnlockTime(prevRemainingTime);
+                chestUnlockQueue.Peek().SetRemaingUnlockTime(prevRemainingTime);
             }
         }
     }

@@ -23,6 +23,7 @@ namespace ChestSystem
             }
         }
 
+        // Returns false if failed to spawn chest
         public bool SpawnChest(){
             int index = GetEmptySlotIndex();
             if(index == -1)
@@ -31,6 +32,7 @@ namespace ChestSystem
             return true;
         }
 
+        // Returns -1 if no slots are awailable
         private int GetEmptySlotIndex(){
             for(int i=0; i<slotsAvailable; i++){
                 if(slotList[i].IsSlotEmpty()){
